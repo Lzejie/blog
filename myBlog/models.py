@@ -16,12 +16,7 @@ class Tag(BaseObject):
         # 如果传入的数据有_id的话证明是已经创建的对象
         if not isinstance(kwargs.get('_id', None), ObjectId):
             self.obj.update(kwargs)
-            self.__insert()
-
-    def edit(self, **kwargs):
-        for key in kwargs.keys():
-            if key in self.key_list:
-                self.obj[key] = kwargs[key]
+            self.insert()
 
 
 class Article(BaseObject):
@@ -30,5 +25,6 @@ class Article(BaseObject):
         # 如果传入的数据有_id的话证明是已经创建的对象
         if not isinstance(kwargs.get('_id', None), ObjectId):
             self.obj.update(kwargs)
-            self.__insert()
+            self.insert()
+
 
