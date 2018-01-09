@@ -1,11 +1,9 @@
 #coding=utf8
 
 from datetime import datetime
-import json
 from flask import render_template, request, abort
-from . import app
-from .models import (Article, Tag, create_article, create_tag)
-from .utils import markdown2html, load_content
+from blog import app
+from utils import markdown2html, load_content
 
 @app.errorhandler(404)
 def page_not_found(error):

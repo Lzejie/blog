@@ -1,0 +1,14 @@
+(dp0
+S'a'
+p1
+S'A'
+p2
+sV\u6bdb\u4f1f
+p3
+V\u66fe\u5fd7\u4f1f
+p4
+sV\u6770\u54e5
+p5
+V\u5f6d\u4e8e\u664f
+p6
+s.

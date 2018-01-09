@@ -12,8 +12,8 @@ from config import DBNAME
 # from myBlog import utils
 # from myBlog import views
 
-# app = Flask(__name__)
-# app.config.from_object('config')
+app = Flask(__name__)
+app.config.from_object('config')
 
 class BaseObject(object):
     __metaclass__ = ABCMeta
@@ -57,4 +57,17 @@ class BaseObject(object):
             if key in self.key_list:
                 self.obj[key] = kwargs[key]
         self.update()
+
+    # 获取条件数据
+    def get(self, condiction=dict({}), sort_by='updatedAt', order_by=1, limit_count=10, ret=None):
+        if not ret:
+            ret_data = [
+                item for item in self.collection.find(condiction).sort({sort_by:order_by}).limit(limit=limit_count)
+            ]
+        else:
+            ret_data = [
+                item for item in self.collection.find(condiction, ret).sort({sort_by: order_by}).limit(limit=limit_count)
+            ]
+        return ret_data
+
 
