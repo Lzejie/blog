@@ -1,50 +1,57 @@
-#coding=utf8
+# coding=utf8
+from datetime import datetime
 
-# from datetime import datetime
-# from bson import ObjectId
-#
-# from pymongo import MongoClient
-#
-# from blog import BaseObject
-# from config import MONGO_EXPRESSION
-# from config import SUMMERYLENGTH
-#
-#
-# class Tag(BaseObject):
-#     def __init__(self, **kwargs):
-#         BaseObject.__init__(self, collection='tag', key_list=['name', 'createdBy'])
-#         # 如果传入的数据有_id的话证明是已经创建的对象
-#         if not isinstance(kwargs.get('_id', None), ObjectId):
-#             self.obj.update(kwargs)
-#             self.insert()
-#
-#
-# class Article(BaseObject):
-#     def __init__(self, **kwargs):
-#         BaseObject.__init__(self, collection='article', key_list=['title', 'content', 'createdBy', 'tags'])
-#         # # 如果传入的数据有_id的话证明是已经创建的对象
-#         # if not isinstance(kwargs.get('_id', None), ObjectId):
-#         #     self.obj.update(kwargs)
-#         #     self.insert()
-#         pass
-#
-#     def load_all_article(self):
-#         return
+from mongoengine import *
+from config import DBNAME, HOST, PORT
 
-from pymongo import MongoClient
+connect('test', host=HOST)
 
-from config import MONGO_EXPRESSION, DBNAME
+class Tags(Document):
+    name = StringField(required=True, max_length=20, unique=True)
 
-DB = MongoClient(MONGO_EXPRESSION)[DBNAME]
+    createdAt = DateTimeField(default=datetime.now())
+    updatedAt = DateTimeField(default=datetime.now())
 
-def load_data(collection_name, sorted_by='updatedAt', order=1, limit_count=10, ret=None):
-    collection = DB[collection_name]
-    ret_data = []
-    if ret:
-        ret_data = [item for item in collection.find({}).sort({sorted_by: order}, ret).limit(limit=limit_count)]
-    else :
-        ret_data = [item for item in collection.find({}).sort({sorted_by: order}).limit(limit=limit_count)]
+class Comment(EmbeddedDocument):
+    name = StringField(required=True, max_length=20)
+    comment = StringField(required=True, max_length=1000, min_length=5)
+    # email
+    email = EmailField()
+    # to save the request info, like ip_address, browser , etc.
+    request_data = DictField()
+    createdAt = StringField(default=datetime.now())
 
-    return ret_data
+class Article(Document):
+    title = StringField(max_length=50)
+    summery = StringField(max_length=300, help_text=u'summery')
+    content = StringField()
+    # DENY mean that one tag delete will be stop when an article was exists
+    tags = ListField(ReferenceField(Tags, reverse_delete_rule=DENY))
+    # image_list = ListField(ReferenceField(Image))
+    createdAt = DateTimeField(default=datetime.now())
+    updatedAt = DateTimeField(default=datetime.now())
+
+if __name__ == '__main__':
+    t = Tags.objects.first()
+    print t.name
+    tag1 = Tags()
+    tag2 = Tags()
+    article = Article()
+
+    tag1.name = u'test1'
+    tag2.name = u'test2'
+    tag1.save()
+    tag2.save()
+    
+    article.title = 'this is a test'
+    article.summery = 'summery '
+    article.content = 'test and this is content'
+
+    # tag_id = tag.save()
 
 
+    article.tags = [tag1]
+    article.tags.append(tag2)
+    article.save()
+
+    
