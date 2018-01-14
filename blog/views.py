@@ -23,9 +23,8 @@ def internal_server_error(error):
 
 @app.route('/')
 def index():
-    pagination = Article.query.order_by(Article.id.desc()).paginate(1)
-    return render_template('index.html',
-                           pagination=pagination)
+    # pagination = Article.query.order_by(Article.id.desc()).paginate(1)
+    return render_template('index.html')
 
 @app.route('/article/<id>')
 def show_article(id):
@@ -109,3 +108,6 @@ def publishTag():
     tagsNam = request.form.get('tag', 'tag')
     create_tag(tagsNam)
     return None
+
+if __name__ == '__main__':
+    app.run()
