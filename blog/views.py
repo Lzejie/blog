@@ -5,6 +5,8 @@ from flask import render_template, request, abort
 from blog import app
 from utils import markdown2html, load_content
 
+from models import Article, Tags, Comment
+
 @app.errorhandler(404)
 def page_not_found(error):
     title = unicode(error)
@@ -23,38 +25,38 @@ def internal_server_error(error):
 
 @app.route('/')
 def index():
-    # pagination = Article.query.order_by(Article.id.desc()).paginate(1)
+    # 获取所有标签
+    tags = Tags.objects.all()
+    # 获取文章
+    articles = Article.objects[:5]
+
     return render_template('index.html')
 
 @app.route('/article/<id>')
-def show_article(id):
-    article = Article.query.get_or_404(id)
+def get_article(_id):
+    article = Article.objects('_id'==_id)
     return render_template('page.html',
                            title=article.title,
                            content=article.content,
                            pub_time=article.pub_time,
                            tags=article.tags)
 
-@app.route('/tags')
-def show_tags():
-    tags = Tag.query.all()
-    return render_template('tags.html',
-                           tags=tags)
-
 @app.route('/tag/<id>')
 def show_tag(id):
-    tag = Tag.query.get_or_404(id)
-    articles = tag.articles.all()
-    return render_template('tag.html',
-                           tag=tag,
-                           entries=articles)
+    # tag = Tag.query.get_or_404(id)
+    # articles = tag.articles.all()
+    # return render_template('tag.html',
+    #                        tag=tag,
+    #                        entries=articles)
+    pass
 
 @app.route('/about')
 def about():
-    content = load_content('about')
-    return render_template('page.html',
-                           title='About',
-                           content=content)
+    # content = load_content('about')
+    # return render_template('page.html',
+    #                        title='About',
+    #                        content=content)
+    pass
 
 @app.route('/links')
 def links():
@@ -65,49 +67,51 @@ def links():
 
 @app.route('/publish', methods=['GET', 'POST'])
 def publish():
-    if request.method == 'GET':
-        abort(404)
-
-    # authorization
-    token = request.form.get('token', '')
-    if token != app.config['TOKEN']:
-        return 'invalid access token', 500
-
-    title = request.form.get('title', None)
-    if not title:
-        return 'no title found', 500
-
-    summary = request.form.get('summary', None)
-    if not summary:
-        return 'no summary found', 500
-
-    content = request.form.get('content', None)
-    if not content:
-        return 'no content found', 500
-    content = markdown2html(content)
-
-    pub_time = request.form.get('pub_time', None)
-    if pub_time:
-        pub_time = datetime.strptime(pub_time, app.config['TIME_FORMAT'])
-
-    tags = request.form.getlist('tags')
-
-    create_article(title, summary, content, pub_time, tags)
-    return '', 200
+    # if request.method == 'GET':
+    #     abort(404)
+    #
+    # # authorization
+    # token = request.form.get('token', '')
+    # if token != app.config['TOKEN']:
+    #     return 'invalid access token', 500
+    #
+    # title = request.form.get('title', None)
+    # if not title:
+    #     return 'no title found', 500
+    #
+    # summary = request.form.get('summary', None)
+    # if not summary:
+    #     return 'no summary found', 500
+    #
+    # content = request.form.get('content', None)
+    # if not content:
+    #     return 'no content found', 500
+    # content = markdown2html(content)
+    #
+    # pub_time = request.form.get('pub_time', None)
+    # if pub_time:
+    #     pub_time = datetime.strptime(pub_time, app.config['TIME_FORMAT'])
+    #
+    # tags = request.form.getlist('tags')
+    #
+    # create_article(title, summary, content, pub_time, tags)
+    # return '', 200
+    pass
 
 @app.route('/publishTag', methods=['GET', 'POST'])
 def publishTag():
-    if request.method == 'GET':
-        abort(404)
-
-    # authorization
-    token = request.form.get('token', '')
-    if token != app.config['TOKEN']:
-        return 'invalid access token', 500
-
-    tagsNam = request.form.get('tag', 'tag')
-    create_tag(tagsNam)
-    return None
+    # if request.method == 'GET':
+    #     abort(404)
+    #
+    # # authorization
+    # token = request.form.get('token', '')
+    # if token != app.config['TOKEN']:
+    #     return 'invalid access token', 500
+    #
+    # tagsNam = request.form.get('tag', 'tag')
+    # create_tag(tagsNam)
+    # return None
+    pass
 
 if __name__ == '__main__':
     app.run()

@@ -2,7 +2,7 @@
 from datetime import datetime
 
 from mongoengine import *
-from config import DBNAME, HOST, PORT
+from config import DBNAME, HOST, PORT, ARTICLETYPE
 
 connect(DBNAME, host=HOST)
 
@@ -28,6 +28,8 @@ class Article(Document):
     title = StringField(max_length=50)
     summery = StringField(max_length=300, help_text=u'summery')
     content = StringField()
+    # 限定选择范围
+    article_type = StringField(required=True, choices=ARTICLETYPE)
     # DENY 模式表示在Tag被删除时，如果该tag有关联的文本，则会报错，禁止该次删除操作
     tags = ListField(ReferenceField(Tags, reverse_delete_rule=DENY))
     # image_list = ListField(ReferenceField(Image))
