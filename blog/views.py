@@ -9,6 +9,7 @@ from models import Article, Tags, Comment
 
 @app.errorhandler(404)
 def page_not_found(error):
+    return 'error'
     title = unicode(error)
     message = error.description
     return render_template('errors.html',
@@ -17,6 +18,7 @@ def page_not_found(error):
 
 @app.errorhandler(500)
 def internal_server_error(error):
+    return 'error'
     title = unicode(error)
     message = error.description
     return render_template('errors.html',
@@ -29,26 +31,42 @@ def index():
     tags = Tags.objects.all()
     # 获取文章
     articles = Article.objects[:5]
+    data = {
+        'title': u'测试',
+        'content': u'<p>文章内容测试</p>' * 20,
+        'pub_time': str(datetime.now().today()),
+        'tags': u'测试',
+        'author': u'Mr.Foo',
+        'tags_cloud': ['tag%s' % index for index in range(1, 10)]
+    }
 
     return render_template('index.html')
 
-@app.route('/article/<id>')
+@app.route('/article/<_id>')
 def get_article(_id):
-    article = Article.objects('_id'==_id)
-    return render_template('page.html',
-                           title=article.title,
-                           content=article.content,
-                           pub_time=article.pub_time,
-                           tags=article.tags)
+    # article = Article.objects('_id'==_id)
+    data = {
+        'title': u'测试',
+        'content': u'<p>文章内容测试</p>'*20,
+        'pub_time': str(datetime.now().today()),
+        'tags': u'测试',
+        'author': u'Mr.Foo',
+        'tags_cloud': ['tag%s'%index for index in range(1,10)]
+    }
+    return render_template('article.html', **data)
 
-@app.route('/tag/<id>')
-def show_tag(id):
-    # tag = Tag.query.get_or_404(id)
-    # articles = tag.articles.all()
-    # return render_template('tag.html',
-    #                        tag=tag,
-    #                        entries=articles)
-    pass
+@app.route('/tag/<_id>')
+def show_tag(_id):
+    data = {
+        'author': 'Mr.foo',
+        'title': u'测试',
+        'tag': u'测试',
+        'summery': u'这是个测试用的摘要',
+        'datetime': str(datetime.today()),
+        'article_count': 10,
+        'tags_cloud': ['tag%s' % index for index in range(1, 10)]
+    }
+    return render_template('tagsArticle.html', **data)
 
 @app.route('/about')
 def about():
@@ -114,4 +132,4 @@ def publishTag():
     pass
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

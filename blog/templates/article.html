@@ -1,0 +1,61 @@
+{% extends 'headerAndFooter.html' %}
+
+{% block content %}
+<main class="col-md-8 main-content">
+    <article id="109" class="post tag-android tag-ke-hu-duan">
+
+        <header class="post-head">
+            <h1 class="post-title">{{ title }}</h1>
+            <section class="post-meta">
+                <span class="author">作者：<a href="/author/wangsai/">{{ author }}</a></span> •
+                <time class="post-date" datetime="{{ pub_time }}" title="{{ pub_time }}">{{ pub_time }}</time>
+            </section>
+        </header>
+
+        <section class="featured-media">
+            <img src="http://static.ghostchina.com/image/c/06/765c76cb1ca259dd8fe8002459bbc.jpg" alt={{ title }}>
+        </section>
+
+        <section class="post-content">
+            {{ content }}
+        </section>
+
+        <footer class="post-footer clearfix">
+            <div class="pull-left tag-list">
+                <i class="fa fa-folder-open-o"></i>
+                <a href="/tag/{{ tags }}/">{{ tags }}</a>
+            </div>
+
+            <div class="pull-right share">
+                <div class="bdsharebuttonbox share-icons bdshare-button-style0-24" data-bd-bind="1515927062899">
+                    <a href="#" class="bds_more" data-cmd="more"></a>
+                    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+                    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+                    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>
+                    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a>
+                    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+                </div>        </div>
+        </footer>
+
+    </article>
+
+    <div class="about-author clearfix">
+        <a href="/author/wangsai/"><img src="http://static.ghostchina.com/image/5/ea/da657733ee8c9add9cf3fd70183a6.png" alt="王赛" class="avatar pull-left"></a>
+
+        <div class="details">
+            <div class="author">
+                关于作者 <a href="/author/wangsai/">{{ author }}</a>
+            </div>
+            <div class="meta-info">
+                <span class="loaction"><i class="fa fa-home"></i>深圳</span>
+                <span class="website"><i class="fa fa-globe"></i><a href="http://www.bootcss.com" targer="_blank">个人网站/博客</a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="prev-next-wrap clearfix">
+
+        <a class="btn btn-default" href="/custom-excerpts/"><i class="fa fa-angle-left fa-fw"></i> 自定义文章摘要（Excerpt）</a>
+    </div>
+</main>
+{% endblock %}
