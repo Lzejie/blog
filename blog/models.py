@@ -51,12 +51,12 @@ if __name__ == '__main__':
     article.title = 'this is a test'
     article.summery = 'summery '
     article.content = 'test and this is content'
-
+    article.article_type = u'技术分享'
     # tag_id = tag.save()
 
 
-    article.tags = [tag1]
-    article.tags.append(tag2)
+    article.tags = [Tags.objects(name='test1').first(), Tags.objects(name='test2').first()]
+    # article.tags.append(tag2)
     article.save()
 
     

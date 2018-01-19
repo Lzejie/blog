@@ -3,20 +3,22 @@
 {% block content %}
 <main class="col-md-8 main-content">
 
+    {% block tag_info %}{% endblock %}
+
+    {% for article in articles %}
     <article id=109 class="post tag-android tag-ke-hu-duan">
 
         <div class="post-head">
-            <h1 class="post-title"><a href="/android-app-for-ghost/">Android 版 Ghost 客户端来了！</a></h1>
+            <h1 class="post-title"><a href="/android-app-for-ghost/">{{ article.title }}</a></h1>
             <div class="post-meta">
-                <span class="author">作者：<a href="/author/wangsai/">王赛</a></span> &bull;
-                <time class="post-date" datetime="2017年11月8日星期三下午4点44分" title="2017年11月8日星期三下午4点44分">2017年11月8日</time>
+                <time class="post-date" datetime="{{ article.pub_time }}" title="{{ article.pub_time }}">{{ article.pub_time }}</time>
             </div>
         </div>
         <div class="featured-media">
             <a href="/android-app-for-ghost/"><img src="http://static.ghostchina.com/image/c/06/765c76cb1ca259dd8fe8002459bbc.jpg" alt="Android 版 Ghost 客户端来了！"></a>
         </div>
         <div class="post-content">
-            <p>Ghost 从一开始就支持响应式 Web 使用体验，但是我们今天仍然向前迈出了一大步 -- 推出 Android 平台原生 APP ！ 我们一直试图为 Ghost 用户构建一个可靠的移动端 Web 体验，但不可避免地，它在它所能做的事情上仍然是相当受限的。即便是在 2017 年的</p>
+            <p>{{ article.summery }}</p>
         </div>
         <div class="post-permalink">
             <a href="/android-app-for-ghost/" class="btn btn-default">阅读全文</a>
@@ -25,16 +27,18 @@
         <footer class="post-footer clearfix">
             <div class="pull-left tag-list">
                 <i class="fa fa-folder-open-o"></i>
-                <a href="/tag/android/">Android</a>, <a href="/tag/ke-hu-duan/">客户端</a>
+                {% for tag in article.tags %}
+                    <a href="/tag/{{ tag }}">{{ tag }}</a>
+                {% endfor %}
             </div>
             <div class="pull-right share">
             </div>
         </footer>
     </article>
-
+    {% endfor %}
 
     <nav class="pagination" role="navigation">
-        <span class="page-number">第 1 页 &frasl; 共 9 页</span>
+        <span class="page-number">第 {{ now_page_num }} 页 &frasl; 共 {{ page_num }} 页</span>
         <a class="older-posts" href="/page/2/"><i class="fa fa-angle-right"></i></a>
     </nav>
 </main>

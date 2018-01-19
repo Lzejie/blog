@@ -1,11 +1,11 @@
-#coding=utf8
+# coding=utf8
 
 from datetime import datetime
 from flask import render_template, request, abort
-from blog import app
-from utils import markdown2html, load_content
 
+from blog import app
 from models import Article, Tags, Comment
+from utils import markdown2html, load_content
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -28,19 +28,30 @@ def internal_server_error(error):
 @app.route('/')
 def index():
     # 获取所有标签
-    tags = Tags.objects.all()
+    tags = [each.name for each in Tags.objects.all()]
+
     # 获取文章
-    articles = Article.objects[:5]
+    page_num = int(request.args.get('page', 0))
+    limit = int(request.args.get('limit', 5))
+    articles = Article.objects[limit*page_num:limit*(page_num+1)]
+    total_page = Article.objects.count() / limit
+
     data = {
-        'title': u'测试',
-        'content': u'<p>文章内容测试</p>' * 20,
-        'pub_time': str(datetime.now().today()),
-        'tags': u'测试',
-        'author': u'Mr.Foo',
-        'tags_cloud': ['tag%s' % index for index in range(1, 10)]
+        'articles':[
+            {
+                'title': each.title,
+                'summery': each.summery,
+                'pub_time': each.createdAt,
+                'tags': [item.name for item in each.tags],
+                # 'author': each.author
+            }for each in articles
+        ],
+        'tags_cloud': tags,
+        'total_page': total_page+1,
+        'now_page_num': page_num+1
     }
 
-    return render_template('index.html')
+    return render_template('index.html', **data)
 
 @app.route('/article/<_id>')
 def get_article(_id):
@@ -55,16 +66,30 @@ def get_article(_id):
     }
     return render_template('article.html', **data)
 
-@app.route('/tag/<_id>')
-def show_tag(_id):
+@app.route('/tag/<name>')
+def show_tag(name):
+    # 获取所有标签
+    tags = Tags.objects.all()
+
+    page_num = int(request.args.get('page', 0))
+    limit = int(request.args.get('limit', 5))
+    total_page = Article.objects.count() / limit
+
+    tag = Tags.objects(name=name).first()
+    articles = Article.objects(tags__in=[tag])[limit * page_num:limit * (page_num + 1)]
     data = {
-        'author': 'Mr.foo',
-        'title': u'测试',
-        'tag': u'测试',
-        'summery': u'这是个测试用的摘要',
-        'datetime': str(datetime.today()),
-        'article_count': 10,
-        'tags_cloud': ['tag%s' % index for index in range(1, 10)]
+        'articles': [
+            {
+                'title': each.title,
+                'summery': each.summery,
+                'pub_time': each.createdAt,
+                'tags': [item.name for item in each.tags],
+                # 'author': each.author
+            } for each in articles
+            ],
+        'tags_cloud': tags,
+        'total_page': total_page + 1,
+        'now_page_num': page_num + 1
     }
     return render_template('tagsArticle.html', **data)
 
