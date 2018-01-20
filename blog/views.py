@@ -1,6 +1,8 @@
 # coding=utf8
 
 from datetime import datetime
+
+from bson import ObjectId
 from flask import render_template, request, abort
 
 from blog import app
@@ -39,6 +41,7 @@ def index():
     data = {
         'articles':[
             {
+                'id': each.id,
                 'title': each.title,
                 'summery': each.summery,
                 'pub_time': each.createdAt,
@@ -55,28 +58,33 @@ def index():
 
 @app.route('/article/<_id>')
 def get_article(_id):
-    # article = Article.objects('_id'==_id)
+    # 获取所有标签
+    tags = [each.name for each in Tags.objects.all()]
+
+    article = Article.objects(id=ObjectId(_id)).first()
+
     data = {
-        'title': u'测试',
-        'content': u'<p>文章内容测试</p>'*20,
-        'pub_time': str(datetime.now().today()),
-        'tags': u'测试',
-        'author': u'Mr.Foo',
-        'tags_cloud': ['tag%s'%index for index in range(1,10)]
+        'title': article.title,
+        'content': article.content,
+        'pub_time': article.createdAt,
+        'tags': article.tags,
+        'tags_cloud': tags
     }
     return render_template('article.html', **data)
 
 @app.route('/tag/<name>')
 def show_tag(name):
     # 获取所有标签
-    tags = Tags.objects.all()
+    tags = [each.name for each in Tags.objects.all()]
 
     page_num = int(request.args.get('page', 0))
     limit = int(request.args.get('limit', 5))
-    total_page = Article.objects.count() / limit
 
     tag = Tags.objects(name=name).first()
     articles = Article.objects(tags__in=[tag])[limit * page_num:limit * (page_num + 1)]
+
+    total_page = len(articles) / limit
+
     data = {
         'articles': [
             {
@@ -87,19 +95,22 @@ def show_tag(name):
                 # 'author': each.author
             } for each in articles
             ],
+        'tag': name,
         'tags_cloud': tags,
         'total_page': total_page + 1,
-        'now_page_num': page_num + 1
+        'now_page_num': page_num + 1,
+        'articles_count': len(articles),
     }
     return render_template('tagsArticle.html', **data)
 
 @app.route('/about')
 def about():
-    # content = load_content('about')
-    # return render_template('page.html',
-    #                        title='About',
-    #                        content=content)
-    pass
+    # 获取所有标签
+    tags = Tags.objects.all()
+
+    data = {
+    }
+    return render_template('article.html', **data)
 
 @app.route('/links')
 def links():
