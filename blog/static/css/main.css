@@ -626,35 +626,35 @@ pre {
 /*====================================================
 	about author and comment
 ====================================================*/
-.about-author {
+.comment {
   background: #ffffff;
   padding: 35px;
   margin-bottom: 35px;
 }
-.about-author .avatar {
+.comment .avatar {
   width: 100px;
   height: 100px;
   border-radius: 50%;
 }
-.about-author .details {
+.comment .details {
   margin-left: 114px;
 }
-.about-author .author {
+.comment .author {
   font-size: 1.5em;
   margin-bottom: 7px;
 }
-.about-author .author a:hover {
+.comment .author a:hover {
   text-decoration: none;
 }
-.about-author .meta-info {
+.comment .meta-info {
   color: #959595;
   margin-bottom: 7px;
 }
-.about-author .meta-info span {
+.comment .meta-info span {
   margin-right: 14px;
   white-space: nowrap;
 }
-.about-author .meta-info span i {
+.comment .meta-info span i {
   margin-right: 7px;
 }
 /* prev and next link */

@@ -16,5 +16,5 @@ MONGO_EXPRESSION = 'mongodb://%s:%s'%(HOST, PORT)
 SUMMERYLENGTH = 150
 
 # 大目录
-ARTICLETYPE = [u'技术分享', u'个人感悟', u'阅读', u'关于']
+ARTICLETYPE = [u'技术分享', u'个人感悟', u'阅读', u'关于我']
 
