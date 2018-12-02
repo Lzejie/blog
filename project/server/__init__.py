@@ -4,6 +4,7 @@
 import os
 
 from flask import Flask, render_template
+from flask_cors import CORS
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_debugtoolbar import DebugToolbarExtension
@@ -30,6 +31,9 @@ def create_app(script_info=None):
         static_folder='../client/static'
     )
 
+    # 允许跨域访问
+    CORS(app)
+
     # set config
     app_settings = os.getenv(
         'APP_SETTINGS', 'project.server.config.DevelopmentConfig')
@@ -47,7 +51,7 @@ def create_app(script_info=None):
     from project.server.user.views import user_blueprint
     from project.server.main.views import main_blueprint
     app.register_blueprint(user_blueprint)
-    app.register_blueprint(main_blueprint)
+    app.register_blueprint(main_blueprint, url_prefix='/main')
 
     # flask login
     from project.server.models import User
